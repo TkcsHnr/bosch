@@ -32,6 +32,8 @@
 	"dependencies": {
 		"@threlte/core": "^6.0.8",
 		"@threlte/extras": "^5.7.0",
+		"csv": "^6.3.3",
+		"fs": "^0.0.1-security",
 		"three": "^0.157.0"
 	}
 }
