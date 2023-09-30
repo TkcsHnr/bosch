@@ -4,7 +4,6 @@
 	import { T, useFrame } from '@threlte/core';
 	import { OrbitControls, Grid } from '@threlte/extras';
 	import { playRate, relevantIndex, frame } from '$lib/stores.js';
-	import { Vector3 } from 'three';
 
 	import * as Predictor from './predictor';
 

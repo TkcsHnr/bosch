@@ -6,8 +6,6 @@
 	import Play from '$lib/components/Play.svelte';
 
 	import { playRate, relevantIndex, collisionType, playing, frame, carSpeed, obj1, obj2, obj3, obj4 } from '$lib/stores.js';
-	import * as stores from '$lib/stores.js';
-	import { get } from 'svelte/store';
 	export let data;
 
 	function handleStart() {

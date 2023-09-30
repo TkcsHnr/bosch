@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { createReadStream } from "fs";
-import { parse } from "csv-parse";
+import csvParser from "csv-parser";
+import axios from "axios";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
@@ -29,53 +29,59 @@ export async function load() {
         vy: []
     };
 
-    let obj;
-
     const carSpeed = [];
     const yaw = [];
     const time = [];
 
-    const data = []
+    const data = [];
 
-    function distance(dx, dy) {
-        return Math.sqrt(dx * dx + dy * dy);
-    }
+    // Replace with the raw GitHub CSV URL you want to fetch
+    const githubCsvUrl = 'https://raw.githubusercontent.com/TkcsHnr/bosch/main/src/lib/data.csv';
 
-    createReadStream("src/lib/data.csv")
-        .pipe(parse({ delimiter: ',', from_line: 2 }))
-        .on('data', (r) => {
-            for (let i = 0; i < r.length; i++) {
-                r[i] = parseFloat(r[i]);
+    // Make an HTTP GET request to fetch the raw CSV data
+    axios.get(githubCsvUrl, {responseType: 'stream'})
+        .then((response) => {
+            if (response.status === 200) {
+
+                response.data
+                    .pipe(csvParser()) 
+                    .on('data', (r) => {
+                        data.push(r);
+                    })
+                    .on('end', () => {
+                        data.forEach(row => {
+                            obj1.dx.push(parseFloat(row.FirstObjectDistance_X) / 128);
+                            obj1.dy.push(parseFloat(row.FirstObjectDistance_Y) / 128);
+                            obj2.dx.push(parseFloat(row.SecondObjectDistance_X) / 128);
+                            obj2.dy.push(parseFloat(row.SecondObjectDistance_Y) / 128);
+                            obj3.dx.push(parseFloat(row.ThirdObjectDistance_X) / 128);
+                            obj3.dy.push(parseFloat(row.ThirdObjectDistance_Y) / 128);
+                            obj4.dx.push(parseFloat(row.FourthObjectDistance_X) / 128);
+                            obj4.dy.push(parseFloat(row.FourthObjectDistance_Y) / 128);
+            
+                            carSpeed.push(parseFloat(row.VehicleSpeed) / 256);
+            
+                            obj1.vx.push(parseFloat(row.FirstObjectSpeed_X) / 256);
+                            obj1.vy.push(parseFloat(row.FirstObjectSpeed_Y) / 256);
+                            obj2.vx.push(parseFloat(row.SecondObjectSpeed_X) / 256);
+                            obj2.vy.push(parseFloat(row.SecondObjectSpeed_Y) / 256);
+                            obj3.vx.push(parseFloat(row.ThirdObjectSpeed_X) / 256);
+                            obj3.vy.push(parseFloat(row.ThirdObjectSpeed_Y) / 256);
+                            obj4.vx.push(parseFloat(row.FourthObjectSpeed_X) / 256);
+                            obj4.vy.push(parseFloat(row.FourthObjectSpeed_Y) / 256);
+            
+                            yaw.push(parseFloat(row.YawRate));
+            
+                            time.push(parseFloat(row.Timestamp));
+                        });
+                    });
+            } else {
+                console.error('Failed to fetch CSV data from GitHub.');
             }
-            data.push(r);
         })
-        .on('end', () => {
-            data.forEach(row => {
-                obj1.dx.push(row[1] / 128);
-                obj1.dy.push(row[2] / 128);
-                obj2.dx.push(row[3] / 128);
-                obj2.dy.push(row[4] / 128);
-                obj3.dx.push(row[5] / 128);
-                obj3.dy.push(row[6] / 128);
-                obj4.dx.push(row[7] / 128);
-                obj4.dy.push(row[8] / 128);
-
-                carSpeed.push(row[9] / 256);
-
-                obj1.vx.push(row[10] / 256);
-                obj1.vy.push(row[11] / 256);
-                obj2.vx.push(row[12] / 256);
-                obj2.vy.push(row[13] / 256);
-                obj3.vx.push(row[14] / 256);
-                obj3.vy.push(row[15] / 256);
-                obj4.vx.push(row[16] / 256);
-                obj4.vy.push(row[17] / 256);
-
-                yaw.push(row[18]);
-
-                time.push(row[19]);
-            });
-        })
+        .catch((error) => {
+            console.error('Error fetching CSV data:', error);
+        });
 
 
     return { obj1, obj2, obj3, obj4, carSpeed, yaw, time };
