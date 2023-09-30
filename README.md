@@ -51,7 +51,7 @@ Start the server
 
 ## CSV dataset selection
 
-To run this project with the correct dataset, you will need to change the `csvURL` to the corrent path in `+page.server.js`. 
+To run this project with the correct dataset, you will need to change the `githubCsvUrl` to the corrent path in `+page.server.js`. 
 
 
 ## Optimizations
