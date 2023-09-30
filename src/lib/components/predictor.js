@@ -14,7 +14,7 @@ function distance(x1, y1, x2, y2) {
 
 export function predict() {
     //predict car
-    let steps = parseInt(2.5*get(breakTime)/dt);
+    let steps = parseInt(2.5 * get(breakTime) / dt);
 
     let carSteps = [];
     let futureCar = [];
@@ -65,7 +65,11 @@ export function predict() {
         objectFutures.push(objectFuture);
     })
 
+    let lastCarPath = -1;
     //compare
+    if(get(stores.detected)) {
+        return {futureCar, objectFutures}
+    }
     for (let i = 0; i < 4; i++) {
         if (objects[i].dx != 0 && objects[i].dy != 0) {
             futureCar.forEach(car => {
@@ -74,14 +78,15 @@ export function predict() {
                     if (d < .25) {
                         honk();
                         stores.relevantIndex.set(i);
+                        lastCarPath = futureCar.indexOf(car);
 
                         let vAngle = new Vector2(carSpeed, 0).angleTo(new Vector2(objects[i].vx), objects[i].vy);
 
-                        if(Math.abs(get(stores.yaw)) > 0.05) {
+                        if (Math.abs(get(stores.yaw)) > 0.05) {
                             //turning
                             stores.collisionType.set("CPTA");
                         }
-                        else if((vAngle > 3 && vAngle < 3.3) || (vAngle < 0.2 || vAngle > 6.1)) {
+                        else if ((vAngle > 3 && vAngle < 3.3) || (vAngle < 0.2 || vAngle > 6.1)) {
                             //longitudal
                             stores.collisionType.set("CPLA");
                         } else {
@@ -89,12 +94,19 @@ export function predict() {
                             stores.collisionType.set("CPNCO");
                         }
 
+                        let distSum = 0;
+                        for (let i = 1; i < lastCarPath; i++) {
+                            distSum += distance(futureCar[i-1][0], futureCar[i-1][1], futureCar[i][0], futureCar[i][1]);
+                        }
+                        stores.collisionDistance.set(distSum);
+                        stores.canStop.set(get(stores.breakDistance) < distSum);
+                        stores.detected.set(true);
+
                         return { futureCar, objectFutures }
                     }
                 })
             });
         }
-
     }
 
     return { futureCar, objectFutures }

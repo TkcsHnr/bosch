@@ -12,6 +12,7 @@
 	import * as stores from '$lib/stores.js';
 
 	import { calculate } from './breakdistance';
+	import { get } from 'svelte/store';
 
 	let futureCar = [];
 	let objectFutures = [];
@@ -53,15 +54,17 @@
 					vx: data.obj1.vx[$frame],
 					vy: data.obj1.vy[$frame]
 				});
-				
-				if($frame > 0) {
+
+				if ($frame > 0) {
 					let dv = data.carSpeed[$frame] - data.carSpeed[$frame - 1];
-					let dt = data.time[$frame] - data.time[$frame - 1]
-					stores.aEgo.set(dv/dt);
+					let dt = data.time[$frame] - data.time[$frame - 1];
+					stores.aEgo.set(dv / dt);
 				}
 
-				stores.breakDistance.set(calculate().distance);
-				stores.breakTime.set(calculate().time);
+				if (!get(stores.detected)) {
+					stores.breakDistance.set(calculate().distance);
+					stores.breakTime.set(calculate().time);
+				}
 
 				let prediction = Predictor.predict();
 				futureCar = prediction.futureCar;
@@ -96,7 +99,6 @@
 
 <Grid infiniteGrid position.y={0} cellSize={1} sectionThickness={0} fadeDistance={200} />
 
-
 <T.Mesh position={[0, 0, 0]} rotation.x={-Math.PI / 2}>
 	<T.PlaneGeometry args={[0.1, 2]} />
 	<T.MeshBasicMaterial color="white" />
@@ -111,7 +113,7 @@
 {/each}
 
 {#if $relevantIndex != -1}
-	<Capsule position={relevantPosition} scale={0.5} rotation.x={Math.PI/2}/>
+	<Capsule position={relevantPosition} scale={0.5} rotation.x={Math.PI / 2} />
 
 	{#each objectFutures[$relevantIndex] as point}
 		<T.Mesh position={[point[0], 0, point[1]]} rotation.x={-Math.PI / 2}>

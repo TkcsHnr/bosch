@@ -21,3 +21,7 @@ export const frame = writable(0);
 export const aEgo = writable(0);
 export const breakDistance = writable(0);
 export const breakTime = writable(0);
+export const collisionDistance = writable(0);
+
+export const detected = writable(false);
+export const canStop = writable(false);
