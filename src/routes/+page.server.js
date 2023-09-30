@@ -29,15 +29,24 @@ export async function load() {
         vy: []
     };
 
+    let obj;
+
     const carSpeed = [];
     const yaw = [];
     const time = [];
 
     const data = []
 
+    function distance(dx, dy) {
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
     createReadStream("src/lib/data.csv")
         .pipe(parse({ delimiter: ',', from_line: 2 }))
         .on('data', (r) => {
+            for (let i = 0; i < r.length; i++) {
+                r[i] = parseFloat(r[i]);
+            }
             data.push(r);
         })
         .on('end', () => {
@@ -62,14 +71,14 @@ export async function load() {
                 obj4.vx.push(row[16] / 256);
                 obj4.vy.push(row[17] / 256);
 
-                yaw.push(row[17]);
+                yaw.push(row[18]);
 
-                time.push(row[18]);
+                time.push(row[19]);
             });
         })
 
 
-    return {obj1, obj2, obj3, obj4, carSpeed, yaw, time};
+    return { obj1, obj2, obj3, obj4, carSpeed, yaw, time };
 };
 
 

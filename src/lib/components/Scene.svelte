@@ -3,76 +3,79 @@
 
 	import { T, useFrame } from '@threlte/core';
 	import { OrbitControls, Grid } from '@threlte/extras';
-	import * as Three from 'three';
+	import { playRate, relevantIndex, frame } from '$lib/stores.js';
+	import { Vector3 } from 'three';
+
+	import * as Predictor from './predictor';
 
 	export let data;
 
 	import Car from './models/Car.svelte';
-	import Truck from './models/Truck.svelte';
 
-    import * as stores from '$lib/stores.js';
+	import * as stores from '$lib/stores.js';
+	import { get } from 'svelte/store';
 
-	let position1 = [0, 0, 0];
-	let position2 = [0, 0, 0];
-	let position3 = [0, 0, 0];
-	let position4 = [0, 0, 0];
+	let futureCar = [];
+	let objectFutures = [];
 
-	let frame = 0;
-	let everyother = 2;
+	let relevantPosition = [0, 0, 0];
+
 	let count = 0;
 	useFrame((state, delta) => {
-		if (count == everyother) {
-			if (frame >= data.time.length) {
-				frame = 0;
+		if (get(stores.playing)) {
+			if (count >= 5 - $playRate) {
+				if ($frame >= data.time.length - 1) {
+					stores.playing.set(false);
+				}
+
+				stores.carSpeed.set(data.carSpeed[$frame]);
+				stores.yaw.set(data.yaw[$frame]);
+				stores.time.set(data.time[$frame]);
+				stores.obj1.set({
+					dx: data.obj1.dx[$frame],
+					dy: data.obj1.dy[$frame],
+					vx: data.obj1.vx[$frame],
+					vy: data.obj1.vy[$frame]
+				});
+				stores.obj2.set({
+					dx: data.obj2.dx[$frame],
+					dy: data.obj2.dy[$frame],
+					vx: data.obj1.vx[$frame],
+					vy: data.obj1.vy[$frame]
+				});
+				stores.obj3.set({
+					dx: data.obj3.dx[$frame],
+					dy: data.obj3.dy[$frame],
+					vx: data.obj1.vx[$frame],
+					vy: data.obj1.vy[$frame]
+				});
+				stores.obj4.set({
+					dx: data.obj4.dx[$frame],
+					dy: data.obj4.dy[$frame],
+					vx: data.obj1.vx[$frame],
+					vy: data.obj1.vy[$frame]
+				});
+
+				let prediction = Predictor.predict();
+				futureCar = prediction.futureCar;
+				objectFutures = prediction.objectFutures;
+				if ($relevantIndex != -1) {
+					let objects = [data.obj1, data.obj2, data.obj3, data.obj4];
+					relevantPosition[0] = objects[get(stores.relevantIndex)].dx[$frame];
+					relevantPosition[2] = objects[get(stores.relevantIndex)].dy[$frame];
+				}
+
+				$frame++;
+				count = 0;
 			}
-
-            stores.carSpeed.set(data.carSpeed[frame]);
-            stores.yaw.set(data.yaw[frame]);
-            stores.time.set(data.time[frame]);
-
-            stores.obj1.set({
-                dx: data.obj1.dx[frame],
-                dy: data.obj1.dy[frame],
-                speed: Math.sqrt(Math.pow(data.obj1.vx[frame], 2) + Math.pow(data.obj1.vy[frame], 2))
-            });
-            stores.obj2.set({
-                dx: data.obj2.dx[frame],
-                dy: data.obj2.dy[frame],
-                speed: Math.sqrt(Math.pow(data.obj2.vx[frame], 2) + Math.pow(data.obj2.vy[frame], 2))
-            });
-            stores.obj3.set({
-                dx: data.obj3.dx[frame],
-                dy: data.obj3.dy[frame],
-                speed: Math.sqrt(Math.pow(data.obj3.vx[frame], 2) + Math.pow(data.obj3.vy[frame], 2))
-            });
-            stores.obj4.set({
-                dx: data.obj4.dx[frame],
-                dy: data.obj4.dy[frame],
-                speed: Math.sqrt(Math.pow(data.obj4.vx[frame], 2) + Math.pow(data.obj4.vy[frame], 2))
-            });
-
-			position1[0] = data.obj1.dx[frame];
-			position1[2] = data.obj1.dy[frame];
-
-			position2[0] = data.obj2.dx[frame];
-			position2[2] = data.obj2.dy[frame];
-
-			position3[0] = data.obj3.dx[frame];
-			position3[2] = data.obj3.dy[frame];
-
-			position4[0] = data.obj4.dx[frame];
-			position4[2] = data.obj4.dy[frame];
-
-			frame++;
-            count = 0;
+			count++;
 		}
-        count++;
 	});
 </script>
 
 <T.PerspectiveCamera
 	makeDefault
-	position={[-20, 10, 0]}
+	position={[-10, 10, -5]}
 	on:create={({ ref }) => {
 		ref.lookAt(0, 1, 0);
 	}}
@@ -86,31 +89,29 @@
 
 <Grid infiniteGrid position.y={0} cellSize={1} sectionThickness={0} fadeDistance={200} />
 
-<!-- <T.Mesh position={[0, 0, 0]} rotation.x={-Math.PI / 2}>
-	<T.PlaneGeometry args={[10, 6]} />
-	<T.MeshBasicMaterial color="blue" />
-</T.Mesh> -->
-<Car position={[0, 0, 0]} scale={0.2} rotation.y={Math.PI} />
-
-<T.Mesh position={position1} rotation.x={-Math.PI / 2}>
-	<T.PlaneGeometry args={[4, 4]} />
-	<T.MeshBasicMaterial color="red" />
-</T.Mesh>
-<T.Mesh position={position2} rotation.x={-Math.PI / 2}>
-	<T.PlaneGeometry args={[4, 4]} />
-	<T.MeshBasicMaterial color="green" />
-</T.Mesh>
-<T.Mesh position={position3} rotation.x={-Math.PI / 2}>
-	<T.PlaneGeometry args={[4, 4]} />
+<T.Mesh position={[0, 0, 0]} rotation.x={-Math.PI / 2}>
+	<T.PlaneGeometry args={[0.1, 2]} />
 	<T.MeshBasicMaterial color="white" />
 </T.Mesh>
-<T.Mesh position={position4} rotation.x={-Math.PI / 2}>
-	<T.PlaneGeometry args={[4, 4]} />
-	<T.MeshBasicMaterial color="yellow" />
-</T.Mesh>
+<Car position={[-2, 0, 0]} scale={0.08} rotation.y={Math.PI} />
 
-<!-- felezovonal -->
-<T.Mesh position={[0, 0.1, 0]} rotation.x={-Math.PI / 2}>
-	<T.PlaneGeometry args={[400, 0.25]} />
-	<T.MeshBasicMaterial color="white" />
-</T.Mesh>
+{#each futureCar as point}
+	<T.Mesh position={[point[0], 0, point[1]]} rotation.x={-Math.PI / 2}>
+		<T.CircleGeometry args={[0.3, 9]} />
+		<T.MeshBasicMaterial color="blue" />
+	</T.Mesh>
+{/each}
+
+{#if $relevantIndex != -1}
+	<T.Mesh position={relevantPosition} rotation.x={-Math.PI / 2}>
+		<T.CircleGeometry args={[0.6, 12]} />
+		<T.MeshBasicMaterial color="red" />
+	</T.Mesh>
+
+	{#each objectFutures[$relevantIndex] as point}
+		<T.Mesh position={[point[0], 0, point[1]]} rotation.x={-Math.PI / 2}>
+			<T.CircleGeometry args={[0.3, 9]} />
+			<T.MeshBasicMaterial color="blue" />
+		</T.Mesh>
+	{/each}
+{/if}

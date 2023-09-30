@@ -8,5 +8,5 @@
 </script>
 
 <Canvas>
-	<Scene data={data}/>
+	<Scene data={data} />
 </Canvas>
