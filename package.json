@@ -35,6 +35,7 @@
 		"@threlte/extras": "^5.7.0",
 		"axios": "^1.5.1",
 		"csv-parser": "^3.0.0",
-		"three": "^0.157.0"
+		"three": "^0.157.0",
+		"three-orbitcontrols": "^2.110.3"
 	}
 }
