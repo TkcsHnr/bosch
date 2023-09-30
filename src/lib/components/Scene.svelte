@@ -10,6 +10,8 @@
 	import Car from '$lib/components/models/Car.svelte';
 	import * as stores from '$lib/stores.js';
 
+	import { calculate } from './breakdistance';
+
 	let futureCar = [];
 	let objectFutures = [];
 
@@ -50,6 +52,14 @@
 					vx: data.obj1.vx[$frame],
 					vy: data.obj1.vy[$frame]
 				});
+				
+				if($frame > 0) {
+					let dv = data.carSpeed[$frame] - data.carSpeed[$frame - 1];
+					let dt = data.time[$frame] - data.time[$frame - 1]
+					stores.aEgo.set(dv/dt);
+				}
+
+				stores.breakDistance.set(calculate());
 
 				let prediction = Predictor.predict();
 				futureCar = prediction.futureCar;

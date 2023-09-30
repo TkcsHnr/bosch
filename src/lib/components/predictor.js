@@ -2,6 +2,7 @@
 import * as stores from "$lib/stores";
 import { get } from "svelte/store";
 import { Vector2 } from "three";
+import { honk } from "./horn";
 
 let dt = .1;
 let steps = 20;
@@ -69,6 +70,7 @@ export function predict() {
                 objectFutures[i].forEach(obj => {
                     let d = distance(obj[0], obj[1], car[0], car[1]);
                     if (d < .25) {
+                        honk();
                         stores.relevantIndex.set(i);
 
                         let vAngle = new Vector2(carSpeed, 0).angleTo(new Vector2(objects[i].vx), objects[i].vy);

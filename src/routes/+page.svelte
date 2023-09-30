@@ -18,7 +18,8 @@
 		obj2,
 		obj3,
 		obj4,
-		time
+		time,
+		breakDistance
 	} from '$lib/stores.js';
 	import { get } from 'svelte/store';
 
@@ -39,16 +40,20 @@
 		<App data={data} />
 	</div>
 	<div
-		class="grow w-72 p-4 bg-base-200 flex flex-col gap-2 h-full overflow-auto border-base-300 border-l shadow-xl"
+		class="grow w-[22rem] p-4 bg-base-200 flex flex-col gap-2 h-full overflow-auto border-base-300 border-l shadow-xl"
 	>
 		<div class="stats stats-vertical shadow">
 			<div class="stat">
-				<div class="stat-title">Timestamp:</div>
-				<div class="stat-value text-lg font-bold">{$time}</div>
-			</div>
-			<div class="stat">
 				<div class="stat-title">Ego speed:</div>
 				<div class="stat-value text-lg font-bold">{$carSpeed}m/s</div>
+			</div>
+			<div class="stat">
+				<div class="stat-title">Break distance:</div>
+				<div class="stat-value text-lg font-bold">{Math.max(0, $breakDistance)}m</div>
+			</div>
+			<div class="stat">
+				<div class="stat-title">Timestamp:</div>
+				<div class="stat-value text-lg font-bold">{$time}s</div>
 			</div>
 			{#if $relevantIndex != -1}
 				<div class="stat">
@@ -93,11 +98,10 @@
 					<Play />
 				{/if}
 			</button>
-			{data.time.length}
 			<progress class="progress w-full" value={$frame} min={0} max={data.time.length} />
 		</div>
 
-		<p>Animation speed: {(1 / (5 - $playRate)).toFixed(2)}x</p>
+		<p>Simulation speed: {(1 / (5 - $playRate)).toFixed(2)}x</p>
 		<input type="range" min="1" max="4" bind:value={$playRate} class="range" step="1" />
 		<div class="w-full flex justify-between text-xs px-2">
 			<span>|</span>

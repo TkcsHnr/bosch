@@ -17,3 +17,6 @@ export const collisionType = writable("-");
 export const playing = writable(false);
 
 export const frame = writable(0);
+
+export const aEgo = writable(0);
+export const breakDistance = writable(0);
