@@ -3,7 +3,7 @@
 	export let data;
 
 	import { T, useFrame } from '@threlte/core';
-	import { Grid, OrbitControls } from '@threlte/extras';
+	import { Grid } from '@threlte/extras';
 	import { relevantIndex, frame, playing, playRate } from '$lib/stores.js';
 
 	import * as Predictor from './predictor';
@@ -92,7 +92,6 @@
 	fov={75}
 	far={200}
 >
-	<OrbitControls enableDamping />
 </T.PerspectiveCamera>
 
 <T.DirectionalLight position={[0, 10, 10]} />
