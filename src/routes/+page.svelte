@@ -79,7 +79,7 @@
 				</div>
 			{/if}
 			{#if $detected}
-				<div class="stat">
+				<div class="stat {$canStop ? "text-success" : "text-error"}">
 					<div class="stat-title">Avoiding collision:</div>
 					<div class="stat-value text-lg font-bold flex">
 						{$canStop ? 'Successful' : 'Unsuccessful'}
