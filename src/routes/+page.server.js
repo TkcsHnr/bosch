@@ -41,7 +41,7 @@ export async function load() {
     const githubCsvUrl = 'https://raw.githubusercontent.com/TkcsHnr/bosch/main/src/lib/data.csv';
 
     // Make an HTTP GET request to fetch the raw CSV data
-    axios.get(githubCsvUrl, { responseType: 'stream' })
+    await axios.get(githubCsvUrl, { responseType: 'stream' })
         .then((response) => {
             if (response.status === 200) {
                 response.data
@@ -76,33 +76,9 @@ export async function load() {
                             time.push(parseFloat(row.Timestamp));
                         });
 
-                        stores.carSpeed.set(carSpeed[0]);
-                        stores.yaw.set(yaw[0]);
-                        stores.time.set(time[0]);
-                        stores.obj1.set({
-                            dx: obj1.dx[0],
-                            dy: obj1.dy[0],
-                            vx: obj1.vx[0],
-                            vy: obj1.vy[0]
-                        });
-                        stores.obj2.set({
-                            dx: obj2.dx[0],
-                            dy: obj2.dy[0],
-                            vx: obj1.vx[0],
-                            vy: obj1.vy[0]
-                        });
-                        stores.obj3.set({
-                            dx: obj3.dx[0],
-                            dy: obj3.dy[0],
-                            vx: obj1.vx[0],
-                            vy: obj1.vy[0]
-                        });
-                        stores.obj4.set({
-                            dx: obj4.dx[0],
-                            dy: obj4.dy[0],
-                            vx: obj1.vx[0],
-                            vy: obj1.vy[0]
-                        });
+                        
+
+
                     });
             } else {
                 console.error('Failed to fetch CSV data from GitHub.');
@@ -111,9 +87,6 @@ export async function load() {
         .catch((error) => {
             console.error('Error fetching CSV data:', error);
         });
-
-
-
 
     return { obj1, obj2, obj3, obj4, carSpeed, yaw, time };
 };

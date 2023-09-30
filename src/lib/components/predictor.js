@@ -71,7 +71,7 @@ export function predict() {
                     if (d < .25) {
                         stores.relevantIndex.set(i);
 
-                        let vAngle = new Vector2(get(stores.carSpeed), 0).angleTo(new Vector2(objects[i].vx), objects[i].vy);
+                        let vAngle = new Vector2(carSpeed, 0).angleTo(new Vector2(objects[i].vx), objects[i].vy);
 
                         if(Math.abs(get(stores.yaw)) > 0.05) {
                             //turning

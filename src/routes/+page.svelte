@@ -17,23 +17,24 @@
 		obj3,
 		obj4
 	} from '$lib/stores.js';
+	import { get } from 'svelte/store';
 	export let data;
 
 	function handleStart() {
 		if (!$playing) {
-			if ($frame >= data.time.length - 1) {
+			if (get(frame) >= data.time.length - 1) {
 				relevantIndex.set(-1);
 				collisionType.set('-');
 				frame.set(0);
 			}
 		}
-		playing.set(!$playing);
+		playing.set(!get(playing));
 	}
 </script>
 
 <div class="w-full h-full flex">
 	<div class="grow">
-		<App {data} />
+		<App data={data} />
 	</div>
 	<div
 		class="grow w-72 p-4 bg-base-200 flex flex-col gap-2 h-full overflow-auto border-base-300 border-l shadow-xl"
