@@ -2,8 +2,6 @@
 import csvParser from "csv-parser";
 import axios from "axios";
 
-import * as stores from '$lib/stores.js';
-
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
     let obj1 = {

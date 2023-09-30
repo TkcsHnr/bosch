@@ -1,5 +1,6 @@
 <script>
 	// @ts-nocheck
+	export let data;
 
 	import App from '$lib/components/App.svelte';
 	import Pause from '$lib/components/Pause.svelte';
@@ -18,7 +19,6 @@
 		obj4
 	} from '$lib/stores.js';
 	import { get } from 'svelte/store';
-	export let data;
 
 	function handleStart() {
 		if (!$playing) {
@@ -89,6 +89,7 @@
 					<Play />
 				{/if}
 			</button>
+			{data.time.length}
 			<progress class="progress w-full" value={$frame} min={0} max={data.time.length} />
 		</div>
 
