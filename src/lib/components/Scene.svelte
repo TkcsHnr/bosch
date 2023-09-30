@@ -8,6 +8,7 @@
 
 	import * as Predictor from './predictor';
 	import Car from '$lib/components/models/Car.svelte';
+	import Capsule from './models/Capsule.svelte';
 	import * as stores from '$lib/stores.js';
 
 	import { calculate } from './breakdistance';
@@ -15,7 +16,7 @@
 	let futureCar = [];
 	let objectFutures = [];
 
-	let relevantPosition = [0, 0, 0];
+	let relevantPosition = [0, 1.5, 0];
 
 	let count = 0;
 	useFrame(() => {
@@ -59,7 +60,8 @@
 					stores.aEgo.set(dv/dt);
 				}
 
-				stores.breakDistance.set(calculate());
+				stores.breakDistance.set(calculate().distance);
+				stores.breakTime.set(calculate().time);
 
 				let prediction = Predictor.predict();
 				futureCar = prediction.futureCar;
@@ -109,10 +111,7 @@
 {/each}
 
 {#if $relevantIndex != -1}
-	<T.Mesh position={relevantPosition} rotation.x={-Math.PI / 2}>
-		<T.CircleGeometry args={[0.6, 12]} />
-		<T.MeshBasicMaterial color="red" />
-	</T.Mesh>
+	<Capsule position={relevantPosition} scale={0.5} rotation.x={Math.PI/2}/>
 
 	{#each objectFutures[$relevantIndex] as point}
 		<T.Mesh position={[point[0], 0, point[1]]} rotation.x={-Math.PI / 2}>

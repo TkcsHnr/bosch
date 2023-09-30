@@ -4,8 +4,9 @@ import { get } from "svelte/store";
 import { Vector2 } from "three";
 import { honk } from "./horn";
 
+import { breakTime } from "$lib/stores";
+
 let dt = .1;
-let steps = 20;
 
 function distance(x1, y1, x2, y2) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -13,6 +14,7 @@ function distance(x1, y1, x2, y2) {
 
 export function predict() {
     //predict car
+    let steps = parseInt(2.5*get(breakTime)/dt);
 
     let carSteps = [];
     let futureCar = [];

@@ -23,7 +23,8 @@ export function calculate() {
     let t3 = dv2/aMax;
     let d3 = aMax/2*(t3*t3) + v1*t3;
 
-    let d = d1 + d2 + d3;
+    let distance = d1 + d2 + d3;
+    let time = tlat + t2 + t3;
 
-    return d;
+    return {distance, time};
 }
