@@ -5,6 +5,7 @@
 	import App from '$lib/components/App.svelte';
 	import Pause from '$lib/components/Pause.svelte';
 	import Play from '$lib/components/Play.svelte';
+	import Again from '$lib/components/Again.svelte';
 
 	import {
 		playRate,
@@ -16,7 +17,8 @@
 		obj1,
 		obj2,
 		obj3,
-		obj4
+		obj4,
+		time
 	} from '$lib/stores.js';
 	import { get } from 'svelte/store';
 
@@ -41,24 +43,25 @@
 	>
 		<div class="stats stats-vertical shadow">
 			<div class="stat">
+				<div class="stat-title">Timestamp:</div>
+				<div class="stat-value text-lg font-bold">{$time}</div>
+			</div>
+			<div class="stat">
 				<div class="stat-title">Ego speed:</div>
-				<div class="stat-value text-lg font-bold">{$carSpeed}</div>
-				<div class="stat-desc">m/s</div>
+				<div class="stat-value text-lg font-bold">{$carSpeed}m/s</div>
 			</div>
 			{#if $relevantIndex != -1}
 				<div class="stat">
 					<div class="stat-title">Object longitudial distance:</div>
 					<div class="stat-value text-lg font-bold flex">
-						{[$obj1, $obj2, $obj3, $obj4][$relevantIndex].dx}
+						{[$obj1, $obj2, $obj3, $obj4][$relevantIndex].dx}m
 					</div>
-					<div class="stat-desc">m</div>
 				</div>
 				<div class="stat">
 					<div class="stat-title">Object laterla distance:</div>
 					<div class="stat-value text-lg font-bold flex">
-						{[$obj1, $obj2, $obj3, $obj4][$relevantIndex].dx}
+						{[$obj1, $obj2, $obj3, $obj4][$relevantIndex].dx}m
 					</div>
-					<div class="stat-desc">m</div>
 				</div>
 				<div class="stat">
 					<div class="stat-title">Object speed (relative):</div>
@@ -66,9 +69,8 @@
 						{Math.sqrt(
 							Math.pow([$obj1, $obj2, $obj3, $obj4][$relevantIndex].vx, 2) +
 								Math.pow([$obj1, $obj2, $obj3, $obj4][$relevantIndex].vy, 2)
-						)}
+						)}m/s
 					</div>
-					<div class="stat-desc">m/s</div>
 				</div>
 				<div class="stat">
 					<div class="stat-title">Collision type:</div>
@@ -85,6 +87,8 @@
 			<button type="button" class="btn btn-square btn-neutral" on:click={handleStart}>
 				{#if $playing}
 					<Pause />
+				{:else if $frame == data.time.length}
+					<Again />
 				{:else}
 					<Play />
 				{/if}

@@ -73,10 +73,6 @@ export async function load() {
 
                             time.push(parseFloat(row.Timestamp));
                         });
-
-                        
-
-
                     });
             } else {
                 console.error('Failed to fetch CSV data from GitHub.');

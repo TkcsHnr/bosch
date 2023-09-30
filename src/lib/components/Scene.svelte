@@ -7,7 +7,7 @@
 	import { relevantIndex, frame, playing, playRate } from '$lib/stores.js';
 
 	import * as Predictor from './predictor';
-
+	import Car from '$lib/components/models/Car.svelte';
 	import * as stores from '$lib/stores.js';
 
 	let futureCar = [];
@@ -85,10 +85,11 @@
 <Grid infiniteGrid position.y={0} cellSize={1} sectionThickness={0} fadeDistance={200} />
 
 
-<T.Mesh position={[-1, 0, 0]} rotation.x={-Math.PI / 2}>
-	<T.CircleGeometry args={[1, 12]} />
+<T.Mesh position={[0, 0, 0]} rotation.x={-Math.PI / 2}>
+	<T.PlaneGeometry args={[0.1, 2]} />
 	<T.MeshBasicMaterial color="white" />
 </T.Mesh>
+<Car position={[-2, 0, 0]} scale={0.08} rotation.y={Math.PI} />
 
 {#each futureCar as point}
 	<T.Mesh position={[point[0], 0, point[1]]} rotation.x={-Math.PI / 2}>
