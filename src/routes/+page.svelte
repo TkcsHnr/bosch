@@ -5,7 +5,18 @@
 	import Pause from '$lib/components/Pause.svelte';
 	import Play from '$lib/components/Play.svelte';
 
-	import { playRate, relevantIndex, collisionType, playing, frame, carSpeed, obj1, obj2, obj3, obj4 } from '$lib/stores.js';
+	import {
+		playRate,
+		relevantIndex,
+		collisionType,
+		playing,
+		frame,
+		carSpeed,
+		obj1,
+		obj2,
+		obj3,
+		obj4
+	} from '$lib/stores.js';
 	export let data;
 
 	function handleStart() {
@@ -51,7 +62,10 @@
 				<div class="stat">
 					<div class="stat-title">Object speed (relative):</div>
 					<div class="stat-value text-lg font-bold flex">
-						{Math.sqrt(Math.pow([$obj1, $obj2, $obj3, $obj4][$relevantIndex].vx, 2) + Math.pow([$obj1, $obj2, $obj3, $obj4][$relevantIndex].vy, 2))}
+						{Math.sqrt(
+							Math.pow([$obj1, $obj2, $obj3, $obj4][$relevantIndex].vx, 2) +
+								Math.pow([$obj1, $obj2, $obj3, $obj4][$relevantIndex].vy, 2)
+						)}
 					</div>
 					<div class="stat-desc">m/s</div>
 				</div>
