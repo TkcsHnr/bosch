@@ -92,7 +92,7 @@
 	fov={75}
 	far={200}
 >
-	<OrbitControls enableDamping />
+	<OrbitControls />
 </T.PerspectiveCamera>
 
 <T.DirectionalLight position={[0, 10, 10]} />
