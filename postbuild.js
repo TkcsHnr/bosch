@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "fs";
 
-const file = ".svelte-kit/output/server/entries/pages/_page.svelte.js";
+const file = ".vercel/output/functions/fn.func/.svelte-kit/output/server/entries/pages/_page.svelte.js";
 
 readFile(file, 'utf8', function (err, data) {
   if (err) {
