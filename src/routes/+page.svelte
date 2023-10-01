@@ -54,20 +54,20 @@
 		<div class="stats stats-vertical shadow">
 			<div class="stat">
 				<div class="stat-title">Timestamp:</div>
-				<div class="stat-value text-lg font-bold">{$time}s</div>
+				<div class="stat-value text-lg font-bold">{parseInt($time * 100) / 100}s</div>
 			</div>
 			<div class="stat">
 				<div class="stat-title">Ego speed:</div>
-				<div class="stat-value text-lg font-bold">{$carSpeed}m/s</div>
+				<div class="stat-value text-lg font-bold">{parseInt(360*$carSpeed) / 100}km/h</div>
 			</div>
 			<div class="stat">
 				<div class="stat-title">Break distance:</div>
-				<div class="stat-value text-lg font-bold">{Math.max(0, $breakDistance)}m</div>
+				<div class="stat-value text-lg font-bold">{parseInt(100*Math.max(0, $breakDistance))/100}m</div>
 			</div>
 			{#if $collisionDistance > 0}
 				<div class="stat">
 					<div class="stat-title">Distance to collision:</div>
-					<div class="stat-value text-lg font-bold">{$collisionDistance}m</div>
+					<div class="stat-value text-lg font-bold">{parseInt(100*$collisionDistance)/100}m</div>
 				</div>
 			{/if}
 			{#if $collisionType != '-'}
@@ -90,22 +90,22 @@
 				<div class="stat">
 					<div class="stat-title">Object longitudial distance:</div>
 					<div class="stat-value text-lg font-bold flex">
-						{[$obj1, $obj2, $obj3, $obj4][$relevantIndex].dx}m
+						{parseInt(100*[$obj1, $obj2, $obj3, $obj4][$relevantIndex].dx)/100}m
 					</div>
 				</div>
 				<div class="stat">
 					<div class="stat-title">Object lateral distance:</div>
 					<div class="stat-value text-lg font-bold flex">
-						{[$obj1, $obj2, $obj3, $obj4][$relevantIndex].dy}m
+						{parseInt(100*[$obj1, $obj2, $obj3, $obj4][$relevantIndex].dy)/100}m
 					</div>
 				</div>
 				<div class="stat">
 					<div class="stat-title">Object speed (relative):</div>
 					<div class="stat-value text-lg font-bold flex">
-						{Math.sqrt(
+						{parseInt(360*Math.sqrt(
 							Math.pow([$obj1, $obj2, $obj3, $obj4][$relevantIndex].vx, 2) +
 								Math.pow([$obj1, $obj2, $obj3, $obj4][$relevantIndex].vy, 2)
-						)}m/s
+						))/100}km/h
 					</div>
 				</div>
 			{/if}
